@@ -3,7 +3,7 @@ import { ChevronDown } from 'lucide-react';
 
 export const ScrollIndicator = () => {
   const scrollToNext = () => {
-    const nextSection = document.querySelector('#about');
+    const nextSection = document.querySelector('#dynamic');
     nextSection?.scrollIntoView({ behavior: 'smooth' });
   };
 

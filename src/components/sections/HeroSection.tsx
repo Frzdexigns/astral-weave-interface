@@ -46,8 +46,8 @@ export const HeroSection = () => {
     }
   }, []);
 
-  const titleText = "NEURAL INTERFACE";
-  const subtitle = "AUGMENTED REALITY DEVELOPER";
+  const titleText = "PROJECT ELARION";
+  const subtitle = "THE FUTURE OF CREATIVE INTELLIGENCE";
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -89,13 +89,17 @@ export const HeroSection = () => {
           </h1>
         </div>
 
-        {/* Subtitle */}
+        {/* Description */}
         <motion.div
           ref={subtitleRef}
-          className="mb-8"
+          className="mb-12 max-w-2xl mx-auto"
         >
-          <p className="text-lg md:text-xl font-body font-light tracking-[0.2em] text-white/80 uppercase">
+          <p className="text-sm md:text-base font-body font-light tracking-[0.15em] text-white/60 uppercase mb-6">
             {subtitle}
+          </p>
+          <p className="text-base md:text-lg font-body text-white/80 leading-relaxed">
+            Where innovation meets artistry. Experience the convergence of advanced technology 
+            and creative vision through our revolutionary platform that transforms ideas into reality.
           </p>
         </motion.div>
 
@@ -108,9 +112,9 @@ export const HeroSection = () => {
           <button 
             className="btn-sci-fi"
             data-hover="true"
-            onClick={() => document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' })}
+            onClick={() => document.querySelector('#dynamic')?.scrollIntoView({ behavior: 'smooth' })}
           >
-            Initialize System
+            Enter The Grid
           </button>
         </motion.div>
 
