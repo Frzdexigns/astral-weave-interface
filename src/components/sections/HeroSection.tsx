@@ -51,12 +51,7 @@ export const HeroSection = () => {
   const subtitle = "THE FUTURE OF CREATIVE INTELLIGENCE";
 
   return (
-    <section className="relative min-h-screen overflow-hidden">
-      {/* Background glow effect */}
-      <div 
-        ref={glowRef}
-        className="absolute inset-0 z-0"
-      />
+ 
 
       {/* DotGrid Background */}
       <div className="min-h-screen absolute inset-0 z-0">
