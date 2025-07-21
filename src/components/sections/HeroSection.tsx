@@ -68,7 +68,7 @@ export const HeroSection = () => {
     proximity={200}
     shockRadius={150}
     shockStrength={3}
-    resistance={0}
+    resistance={750}
     returnDuration={1.5}
   />
 
