@@ -1,10 +1,13 @@
 'use client';
 import { useRef, useEffect, useCallback, useMemo } from "react";
 import { gsap } from "gsap";
+import { InertiaPlugin } from "gsap/InertiaPlugin";
 
-const throttle = (func: Function, limit: number) => {
+gsap.registerPlugin(InertiaPlugin);
+
+const throttle = (func, limit) => {
   let lastCall = 0;
-  return function (...args: any[]) {
+  return function (...args) {
     const now = performance.now();
     if (now - lastCall >= limit) {
       lastCall = now;
@@ -13,7 +16,7 @@ const throttle = (func: Function, limit: number) => {
   };
 };
 
-function hexToRgb(hex: string) {
+function hexToRgb(hex) {
   const m = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
   if (!m) return { r: 0, g: 0, b: 0 };
   return {
@@ -23,23 +26,7 @@ function hexToRgb(hex: string) {
   };
 }
 
-interface DotGridProps {
-  dotSize?: number;
-  gap?: number;
-  baseColor?: string;
-  activeColor?: string;
-  proximity?: number;
-  speedTrigger?: number;
-  shockRadius?: number;
-  shockStrength?: number;
-  maxSpeed?: number;
-  resistance?: number;
-  returnDuration?: number;
-  className?: string;
-  style?: React.CSSProperties;
-}
-
-const DotGrid: React.FC<DotGridProps> = ({
+const DotGrid = ({
   dotSize = 16,
   gap = 32,
   baseColor = "#5227FF",
@@ -54,9 +41,9 @@ const DotGrid: React.FC<DotGridProps> = ({
   className = "",
   style,
 }) => {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const dotsRef = useRef<any[]>([]);
+  const wrapperRef = useRef(null);
+  const canvasRef = useRef(null);
+  const dotsRef = useRef([]);
   const pointerRef = useRef({
     x: 0,
     y: 0,
@@ -121,7 +108,7 @@ const DotGrid: React.FC<DotGridProps> = ({
   useEffect(() => {
     if (!circlePath) return;
 
-    let rafId: number;
+    let rafId;
     const proxSq = proximity * proximity;
 
     const draw = () => {
@@ -166,7 +153,7 @@ const DotGrid: React.FC<DotGridProps> = ({
 
   useEffect(() => {
     buildGrid();
-    let ro: ResizeObserver | null = null;
+    let ro = null;
     if ("ResizeObserver" in window) {
       ro = new ResizeObserver(buildGrid);
       wrapperRef.current && ro.observe(wrapperRef.current);
@@ -180,7 +167,7 @@ const DotGrid: React.FC<DotGridProps> = ({
   }, [buildGrid]);
 
   useEffect(() => {
-    const onMove = (e: MouseEvent) => {
+    const onMove = (e) => {
       const now = performance.now();
       const pr = pointerRef.current;
       const dt = pr.lastTime ? now - pr.lastTime : 16;
@@ -202,9 +189,7 @@ const DotGrid: React.FC<DotGridProps> = ({
       pr.vy = vy;
       pr.speed = speed;
 
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const rect = canvas.getBoundingClientRect();
+      const rect = canvasRef.current.getBoundingClientRect();
       pr.x = e.clientX - rect.left;
       pr.y = e.clientY - rect.top;
 
@@ -216,10 +201,7 @@ const DotGrid: React.FC<DotGridProps> = ({
           const pushX = dot.cx - pr.x + vx * 0.005;
           const pushY = dot.cy - pr.y + vy * 0.005;
           gsap.to(dot, {
-            xOffset: pushX,
-            yOffset: pushY,
-            duration: 0.5,
-            ease: "power2.out",
+            inertia: { xOffset: pushX, yOffset: pushY, resistance },
             onComplete: () => {
               gsap.to(dot, {
                 xOffset: 0,
@@ -234,10 +216,8 @@ const DotGrid: React.FC<DotGridProps> = ({
       }
     };
 
-    const onClick = (e: MouseEvent) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const rect = canvas.getBoundingClientRect();
+    const onClick = (e) => {
+      const rect = canvasRef.current.getBoundingClientRect();
       const cx = e.clientX - rect.left;
       const cy = e.clientY - rect.top;
       for (const dot of dotsRef.current) {
@@ -249,10 +229,7 @@ const DotGrid: React.FC<DotGridProps> = ({
           const pushX = (dot.cx - cx) * shockStrength * falloff;
           const pushY = (dot.cy - cy) * shockStrength * falloff;
           gsap.to(dot, {
-            xOffset: pushX,
-            yOffset: pushY,
-            duration: 0.5,
-            ease: "power2.out",
+            inertia: { xOffset: pushX, yOffset: pushY, resistance },
             onComplete: () => {
               gsap.to(dot, {
                 xOffset: 0,
@@ -268,7 +245,7 @@ const DotGrid: React.FC<DotGridProps> = ({
     };
 
     const throttledMove = throttle(onMove, 50);
-    window.addEventListener("mousemove", throttledMove);
+    window.addEventListener("mousemove", throttledMove, { passive: true });
     window.addEventListener("click", onClick);
 
     return () => {
@@ -287,7 +264,7 @@ const DotGrid: React.FC<DotGridProps> = ({
 
   return (
     <section
-      className={`flex items-center justify-center h-full w-full relative ${className}`}
+      className={`p-4 flex items-center justify-center h-full w-full relative ${className}`}
       style={style}
     >
       <div ref={wrapperRef} className="w-full h-full relative">
