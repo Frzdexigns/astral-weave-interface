@@ -59,7 +59,7 @@ export const HeroSection = () => {
       />
 
       {/* DotGrid Background */}
-      <div className="absolute inset-0 z-0" style={{ height: '100vh'}}>
+      <div className="min-h-screen absolute inset-0 z-0">
           <DotGrid
     dotSize={4}
     gap={10}
