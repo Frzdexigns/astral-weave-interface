@@ -59,13 +59,13 @@ export const HeroSection = () => {
       />
 
       {/* DotGrid Background */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0" style={{ height: '100vh'}}>
           <DotGrid
-    dotSize={3}
+    dotSize={4}
     gap={10}
     baseColor="#fff"
-    activeColor="#dddfff"
-    proximity={200}
+    activeColor="#b6fff6"
+    proximity={150}
     shockRadius={150}
     shockStrength={3}
     resistance={750}
