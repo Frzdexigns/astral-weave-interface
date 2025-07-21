@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollIndicator } from '../ScrollIndicator';
-import DotGrid from '../DotGrid';
 
 export const HeroSection = () => {
   const titleRef = useRef<HTMLDivElement>(null);
@@ -51,27 +50,23 @@ export const HeroSection = () => {
   const subtitle = "THE FUTURE OF CREATIVE INTELLIGENCE";
 
   return (
- 
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Background glow effect */}
+      <div 
+        ref={glowRef}
+        className="absolute inset-0 bg-gradient-radial from-white/5 via-transparent to-transparent"
+        style={{
+          background: 'radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%)'
+        }}
+      />
 
-      {/* DotGrid Background */}
-      <div className="min-h-screen absolute inset-0 z-0">
-          <DotGrid
-    dotSize={4}
-    gap={10}
-    baseColor="#fff"
-    activeColor="#b6fff6"
-    proximity={150}
-    shockRadius={150}
-    shockStrength={3}
-    resistance={750}
-    returnDuration={1.5}
-  />
-
+      {/* Grid lines */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="h-full w-full grid-bg" />
       </div>
 
       {/* Main content */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center">
-        <div className="text-center max-w-4xl mx-auto px-4">
+      <div className="relative z-10 text-center max-w-4xl mx-auto px-4">
         {/* Main title */}
         <div ref={titleRef} className="mb-6">
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-tech font-black tracking-wider">
@@ -122,24 +117,21 @@ export const HeroSection = () => {
             Enter The Grid
           </button>
         </motion.div>
-        </div>
+
+        {/* Decorative elements */}
+        <motion.div
+          className="absolute top-1/4 left-10 w-20 h-20 border border-white/20 rotate-45"
+          animate={{ rotate: [45, 405], scale: [1, 1.1, 1] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div
+          className="absolute bottom-1/4 right-10 w-16 h-16 border border-white/30"
+          animate={{ rotate: [0, 360], opacity: [0.3, 0.6, 0.3] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+        />
       </div>
 
-      {/* Decorative elements */}
-      <motion.div
-        className="absolute top-1/4 left-10 w-20 h-20 border border-white/20 rotate-45 z-20"
-        animate={{ rotate: [45, 405], scale: [1, 1.1, 1] }}
-        transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-      />
-      <motion.div
-        className="absolute bottom-1/4 right-10 w-16 h-16 border border-white/30 z-20"
-        animate={{ rotate: [0, 360], opacity: [0.3, 0.6, 0.3] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
-      />
-
-      <div className="relative z-20">
-        <ScrollIndicator />
-      </div>
+      <ScrollIndicator />
     </section>
   );
 };
