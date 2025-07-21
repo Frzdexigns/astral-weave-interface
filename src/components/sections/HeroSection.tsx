@@ -65,8 +65,8 @@ export const HeroSection = () => {
     gap={10}
     baseColor="#fff"
     activeColor="#dddfff"
-    proximity={120}
-    shockRadius={500}
+    proximity={50}
+    shockRadius={150}
     shockStrength={3}
     resistance={750}
     returnDuration={1.5}
