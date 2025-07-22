@@ -22,103 +22,52 @@ export const JoinSection = () => {
 
     if (!section || !title || !description || !form || !stats) return;
 
-    // Pin the section
-    ScrollTrigger.create({
-      trigger: section,
-      start: "top top",
-      end: "bottom top",
-      pin: true,
-      pinSpacing: false,
+    // Set initial states
+    gsap.set([title, description, form], { opacity: 0, y: 60 });
+    gsap.set(stats.children, { opacity: 0, y: 40, scale: 0.8 });
+
+    // Scroll-triggered entrance animation
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top 75%",
+        end: "top 25%",
+        toggleActions: "play none none reset",
+        once: true
+      }
     });
 
-    // Title dramatic entrance
-    gsap.fromTo(title,
-      { 
-        opacity: 0, 
-        scale: 0.3, 
-        rotationY: 180,
-        transformOrigin: "center center"
-      },
-      {
-        opacity: 1,
-        scale: 1,
-        rotationY: 0,
-        duration: 2,
-        ease: "back.out(1.7)",
-        scrollTrigger: {
-          trigger: title,
-          start: "top 80%",
-          end: "bottom 20%",
-          toggleActions: "play none none reverse"
-        }
-      }
-    );
-
-    // Description slide up
-    gsap.fromTo(description,
-      { opacity: 0, y: 100, skewX: 10 },
-      {
-        opacity: 1,
-        y: 0,
-        skewX: 0,
-        duration: 1.2,
-        delay: 0.5,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: description,
-          start: "top 75%",
-          end: "bottom 25%",
-          toggleActions: "play none none reverse"
-        }
-      }
-    );
-
-    // Form morphing entrance
-    gsap.fromTo(form,
-      { 
-        opacity: 0, 
-        scale: 0.5, 
-        rotation: 180,
-        filter: "blur(20px)"
-      },
-      {
-        opacity: 1,
-        scale: 1,
-        rotation: 0,
-        filter: "blur(0px)",
-        duration: 1.5,
-        delay: 0.8,
-        ease: "elastic.out(1, 0.5)",
-        scrollTrigger: {
-          trigger: form,
-          start: "top 70%",
-          end: "bottom 30%",
-          toggleActions: "play none none reverse"
-        }
-      }
-    );
-
-    // Stats counter animation
-    gsap.fromTo(stats.children,
-      { opacity: 0, scale: 0, rotation: 360 },
-      {
-        opacity: 1,
-        scale: 1,
-        rotation: 0,
-        duration: 1,
-        stagger: 0.2,
-        ease: "back.out(2)",
-        scrollTrigger: {
-          trigger: stats,
-          start: "top 75%",
-          end: "bottom 25%",
-          toggleActions: "play none none reverse"
-        }
-      }
-    );
+    tl.to(title, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: "power2.out"
+    })
+    .to(description, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: "power2.out"
+    }, "-=0.3")
+    .to(form, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: "power2.out"
+    }, "-=0.3")
+    .to(stats.children, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.6,
+      stagger: 0.1,
+      ease: "back.out(1.7)"
+    }, "-=0.3");
 
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      ScrollTrigger.getAll().forEach(trigger => {
+        if (trigger.trigger === section) trigger.kill();
+      });
     };
   }, []);
 
@@ -140,7 +89,7 @@ export const JoinSection = () => {
     <section 
       ref={sectionRef}
       id="join" 
-      className="min-h-screen bg-black text-white relative overflow-hidden flex items-center"
+      className="min-h-screen bg-black text-white relative overflow-hidden flex items-center pt-24 scroll-mt-4"
     >
       {/* Background effects */}
       <div className="absolute inset-0">
@@ -190,22 +139,22 @@ export const JoinSection = () => {
         <div className="text-center max-w-4xl mx-auto">
           
           {/* Title */}
-          <motion.h2 
+          <h2 
             ref={titleRef}
-            className="text-5xl md:text-7xl lg:text-8xl font-tech font-black mb-8 glow-text-lg"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-tech font-black mb-8 glow-text-lg"
           >
             JOIN THE
             <br />
             <span className="text-white/60">MOVEMENT</span>
-          </motion.h2>
+          </h2>
           
           {/* Description */}
-          <motion.p 
+          <p 
             ref={descriptionRef}
-            className="text-lg md:text-xl font-body text-white/70 mb-16 leading-relaxed max-w-2xl mx-auto"
+            className="text-base sm:text-lg md:text-xl font-body text-white/70 mb-16 leading-relaxed max-w-2xl mx-auto"
           >
             We Do for creating quality. Come early.
-          </motion.p>
+          </p>
 
           {/* Email form */}
           <form ref={formRef} onSubmit={handleSubmit} className="mb-16">
@@ -216,16 +165,14 @@ export const JoinSection = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email address"
                 required
-                className="flex-1 px-6 py-4 bg-white/10 border border-white/20 text-white placeholder-white/50 focus:border-white/60 focus:outline-none font-body backdrop-blur-sm"
+                className="flex-1 px-4 md:px-6 py-3 md:py-4 bg-white/10 border border-white/20 text-white placeholder-white/50 focus:border-white/60 focus:outline-none font-body backdrop-blur-sm text-sm md:text-base"
                 whileFocus={{ scale: 1.02 }}
-                data-hover="true"
               />
               <motion.button
                 type="submit"
-                className="px-8 py-4 bg-white text-black font-tech text-sm tracking-wider uppercase hover:bg-white/90 transition-colors relative overflow-hidden group"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                data-hover="true"
+                className="px-6 md:px-8 py-3 md:py-4 bg-white text-black font-tech text-xs md:text-sm tracking-wider uppercase hover:bg-white/90 transition-colors relative overflow-hidden group"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 <span className="relative z-10">Join Movement</span>
                 <motion.div
@@ -239,18 +186,17 @@ export const JoinSection = () => {
           </form>
 
           {/* Stats */}
-          <div ref={statsRef} className="flex justify-center space-x-16">
+          <div ref={statsRef} className="flex justify-center space-x-8 md:space-x-16">
             {stats.map((stat, index) => (
               <motion.div
                 key={index}
                 className="text-center group cursor-default"
-                whileHover={{ scale: 1.1 }}
-                data-hover="true"
+                whileHover={{ scale: 1.05 }}
               >
-                <div className="text-2xl md:text-3xl font-tech font-bold mb-2 glow-text group-hover:text-white transition-colors">
+                <div className="text-xl md:text-2xl lg:text-3xl font-tech font-bold mb-2 glow-text group-hover:text-white transition-colors">
                   {stat.number}
                 </div>
-                <div className="text-sm font-body text-white/50 uppercase tracking-wider">
+                <div className="text-xs md:text-sm font-body text-white/50 uppercase tracking-wider">
                   {stat.label}
                 </div>
               </motion.div>
@@ -275,10 +221,10 @@ export const JoinSection = () => {
         </div>
 
         {/* Decorative corners */}
-        <div className="absolute top-8 left-8 w-16 h-16 border-l-2 border-t-2 border-white/20" />
-        <div className="absolute top-8 right-8 w-16 h-16 border-r-2 border-t-2 border-white/20" />
-        <div className="absolute bottom-8 left-8 w-16 h-16 border-l-2 border-b-2 border-white/20" />
-        <div className="absolute bottom-8 right-8 w-16 h-16 border-r-2 border-b-2 border-white/20" />
+        <div className="absolute top-8 left-8 w-12 h-12 md:w-16 md:h-16 border-l-2 border-t-2 border-white/20" />
+        <div className="absolute top-8 right-8 w-12 h-12 md:w-16 md:h-16 border-r-2 border-t-2 border-white/20" />
+        <div className="absolute bottom-8 left-8 w-12 h-12 md:w-16 md:h-16 border-l-2 border-b-2 border-white/20" />
+        <div className="absolute bottom-8 right-8 w-12 h-12 md:w-16 md:h-16 border-r-2 border-b-2 border-white/20" />
       </div>
     </section>
   );
